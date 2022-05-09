@@ -22,6 +22,12 @@ const routes: RouteRecordRaw[]=[
     },{
         path: '/catergory/create/',
         component: () => import('../views/catergory/create.vue'),
+    },{
+        path: '/login/',
+        component: () => import('../views/accounts/login.vue'),
+    },{
+        path: '/register/',
+        component: () => import('../views/accounts/register.vue'),
     }
 ]
 
