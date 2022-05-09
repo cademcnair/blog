@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const keys = require('./keys');
+const { execSync } = require('child_process');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -107,13 +108,15 @@ async function main(){
         comments:"[]",
         description:"r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr ",
     })
-    await User.create({
-        username:keys.admin.user,
-        passcode:keys.admin.passcode,
-        email:keys.admin.email,
-        mail:false,
-        comments:"[]",
-    })
+    if(!await User.findOne({where:{username:keys.admin.user}})){
+        await User.findCreateFind({
+            username:keys.admin.user,
+            passcode:keys.admin.passcode,
+            email:keys.admin.email,
+            mail:false,
+            comments:"[]",
+        })
+    }
 
     app.listen(4000)
 }
