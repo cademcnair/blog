@@ -109,7 +109,7 @@ async function main(){
         description:"r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr ",
     })
     if(!await User.findOne({where:{username:keys.admin.user}})){
-        await User.findCreateFind({
+        await User.create({
             username:keys.admin.user,
             passcode:keys.admin.passcode,
             email:keys.admin.email,
