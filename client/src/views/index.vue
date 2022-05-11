@@ -1,5 +1,11 @@
 <template>
   <div class='index-main'>
+    <div class="manage-bar" v-if="admin">
+      <button @click="create()">+</button>
+      <button @click="del(admin_selected)">-</button>
+      <button @click="edit(admin_selected)">=</button>
+      <input type="number" v-model="admin_selected">
+    </div>
     <div class="posts">
       <div 
         class="post"
@@ -10,7 +16,7 @@
           <div class="post--image" :style="{'background-image':`url(${post.sideimage})`}"></div>
           <div class="post--content">
             <b>{{post.title}}</b><br><br>
-            <a>{{cutoff(post.description,100)}}</a>
+            <a>{{cutoff(post.description,90)}}</a>
           </div>
         </div>
       </div>
@@ -21,12 +27,15 @@
 <script lang='ts'>
   import { defineComponent } from 'vue';
   import server from '../server/'
+  import cookies from 'cookies-js'
   import { catergory, post } from "../types/"
 
   export default defineComponent({
     data(){return{
       posts:[] as post[],
       catergories:[] as catergory[],
+      admin:cookies.get("username")=="aimedtuba",
+      admin_selected:0,
     }},
     async mounted(){
       let data=await fetch(`${server}/`)
@@ -45,6 +54,15 @@
         splitstring.splice(truemax,splitstring.length)
         let dots=splitstring.length==string.split("").length?"":" ..."
         return splitstring.join("")+dots
+      },
+      create(){
+        this.$router.push("/post/create/")
+      },
+      del(i:number){
+
+      },
+      edit(i:number){
+
       }
     }
   })
@@ -95,5 +113,38 @@
   .post--content{
     grid-column-start: 2;
     grid-column-end: 4;
+  }
+  .manage-bar{
+    margin:10px;
+    padding-bottom:10px;
+    border-bottom:2.5px solid #eee;
+  }
+  button{
+    padding-left:20px;
+    padding-right:20px;
+    border:none;
+    border-radius: 5px;
+    background-color:white;
+    cursor:pointer;
+    outline:none;
+    font-size:14px;
+    transition: 0.5s;
+    &:hover{
+      background-color:#eee;
+      transition: 0.5s;
+    }
+  }
+  input{
+    border:none;
+    border-radius: 5px;
+    padding-left:5px;
+    background-color:white;
+    outline:none;
+    font-size:14px;
+    transition: 0.5s;
+    &:hover, &:focus{
+      background-color:#eee;
+      transition: 0.5s;
+    }
   }
 </style>

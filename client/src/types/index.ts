@@ -21,33 +21,34 @@ export interface catergory{
 }
 export interface contentString{
     text: string;
+    type: "string"
 }
 export interface contentImage{
     url: string;
     caption?: string;
     author?: string;
+    type: "image"
 }
 export interface contentCode{
-    gistid: number;
-    hidelinenumbers: boolean;
-    hidefooter: boolean;
-    hidecaption: boolean;
-    lines?: number[][];
-    highlight?: number[][];
+    gistid: string;
+    lines:number;
+    type: "code"
 }
-export type contentList = contentString[];
+export interface contentList{
+    items: string[],
+    type: "list"
+}
 export type sectionContent = contentString | contentImage | contentCode | contentList
 export interface section{
     title: string;
     description?: string;
     image?: string;
-    content:sectionContent;
+    content:sectionContent[];
 }
-export type content = section[];
 export interface post{
     id: number;
     title: string;
-    content: content;
+    content: section[];
     categories: number[];
     comments: number[];
     createdAt: Date;

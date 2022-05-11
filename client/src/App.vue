@@ -35,7 +35,8 @@
     padding: 0;
   }
   *{
-    font-family: 'Lato', sans-serif;
+    font-family: georgia,'times new roman',times,serif;
+    line-height:1.25em;
   }
   .main--navbar{
     display:table;

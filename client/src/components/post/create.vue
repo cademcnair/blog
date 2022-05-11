@@ -1,17 +1,22 @@
 <template>
-  <div class='create-post-main'>
-    <create></create>
+  <div class='create-main'>
+    <edit
+       title=""
+       description=""
+       content="[]"
+       headerimage=""
+    ></edit>
   </div>
 </template>
 
 <script lang='ts'>
   import { defineComponent } from 'vue';
-  import create from "../../components/post/create.vue"
+  import edit from './edit.vue'
   
   export default defineComponent({
     components:{
-      create
-    }
+      edit
+    },
   })
 </script>
 

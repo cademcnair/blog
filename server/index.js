@@ -126,6 +126,18 @@ app.use(cors())
 
 main()
 
+app.get('/:gistid/gist/',async function(req,res){
+    res.send(`
+        <html>
+            <head>
+                <title>Gist ${req.params.gistid}</title>
+            </head>
+            <body>
+            <script src="https://gist.github.com/codingtuba/${req.params.gistid}.js"></script>
+            </body>
+        </html>
+    `)
+})
 app.get('/',async function(req, res){
     let [posts,catergories]=[await Post.findAll(),await Catergory.findAll()];
     posts.forEach(post=>{

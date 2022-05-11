@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gist</title>
+</head>
+<body>
+    <script>
+        let gist=location.hash.replace("#","")
+        let script=document.createElement("script")
+        script.src="https://gist.github.com/codingtuba/"+gist+".js"
+        script.type="text/javascript"
+        document.body.appendChild(script)
+    </script>
+    <script src="https://gist.github.com/codingtuba/820ffaa549833cd1a38bde68ccfa0ecf.js"></script>
+</body>
+</html>
