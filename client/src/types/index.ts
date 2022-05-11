@@ -49,7 +49,7 @@ export interface post{
     id: number;
     title: string;
     content: section[];
-    categories: number[];
+    categories: string;
     comments: number[];
     createdAt: Date;
     updatedAt: Date;

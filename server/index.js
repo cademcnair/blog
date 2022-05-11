@@ -189,3 +189,20 @@ app.post("/login/", async function (req, res) {
         }
     }
 })
+app.post("/post/create/", async function (req, res) {
+    if (objectkeys(req.body, ['title', 'content', 'categories', 'description', 'sideimage', 'headerimage', 'passcode'])) {
+        if(req.body.passcode==keys.admin.passcode){
+            let post=await Post.create({
+                title:req.body.title,
+                content:JSON.stringify(req.body.content),
+                categories:JSON.stringify(req.body.categories),
+                description:req.body.description,
+                sideimage:req.body.sideimage,
+                headerimage:req.body.headerimage,
+                comments:"[]"
+            })
+            post.comments=[]
+            res.json(post)
+        }else{res.status(401).send("Wrong passcode")}
+    }else{res.status(406).send("Missing parameters")}
+})

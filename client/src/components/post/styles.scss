@@ -11,6 +11,9 @@ input,textarea{
 .tiny{
     width:auto !important;
 }
+.long{
+    width:100% !important;
+}
 input::placeholder,textarea::placeholder{
     color:black;
 }
