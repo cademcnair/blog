@@ -103,7 +103,7 @@
         ecode,
         eimage,
         list,
-    }
+    },
   })
 </script>
 

@@ -20,12 +20,12 @@
         :key="index"
       >
         <vstring
-          style="margin-top:10px"
+          style="margin-top:15px"
           v-if="item.type=='string'"
           :text="item.text"
         ></vstring>
         <vimage
-          style="margin-top:10px"
+          style="margin-top:15px"
           v-if="item.type=='image'"
           :item="item"
         ></vimage>

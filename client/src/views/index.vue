@@ -70,7 +70,7 @@
         })).ok){this.posts.splice(i,1)}
       },
       edit(i:number){
-
+        this.$router.push(`/${this.posts[i].id}/post/edit/`)
       }
     }
   })

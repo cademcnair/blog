@@ -86,9 +86,8 @@
   }
   .main--content{
     width: 100vw;
-    max-width: 600px;
+    max-width: 650px;
     height: calc(100vh - 55px);
-    border:1px solid black;
     overflow-x:hidden;
   }
   .main{
