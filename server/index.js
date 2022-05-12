@@ -37,7 +37,6 @@ User.init({
 Catergory.init({
     name:DataTypes.STRING,
     description:DataTypes.STRING,
-    posts:DataTypes.STRING,
     comments:DataTypes.STRING,
 },{sequelize})
 Post.init({
@@ -57,57 +56,8 @@ UserComment.init({
 
 async function main(){
     await sequelize.authenticate();
-    await sequelize.sync({force:true});
+    await sequelize.sync();
 
-    await Post.destroy({
-        where:{},
-        truncate:true,
-    })
-    await Catergory.create({
-        name: "tiny",
-        description: "tiny",
-        posts:"[2]",
-        comments:"[]",
-    })
-    await Catergory.create({
-        name: "large",
-        description: "large",
-        posts:"[1,3]",
-        comments:"[]",
-    })
-    await Catergory.create({
-        name: "spaces",
-        description: "spaces",
-        posts:"[3]",
-        comments:"[]",
-    })
-    await Post.create({
-        title:"Hello world",
-        sideimage:"https://picsum.photos/200/300/",
-        headerimage:"https://picsum.photos/200/300/",
-        content:"[]",
-        categories:"[]",
-        comments:"[]",
-        description:"tdyfuyvhkbjluiyfutd56s4d5rytcuvhjbkjvyuftd56s4wsd5rytcgjvcutydr6s4w5s6rdytcgvjhyuctd56s4wsd5rytfuvyifu6d7e5wdtufyvuftd657ew67dtyufyvjufdt675ewdtufyvu6r7e5gdrshtfjygukhgyftdyrtfyguhijoihugfytdfugihojpuiyutydtryfugiyou6d",
-    })
-    await Post.create({
-        title:"Hello world",
-        sideimage:"https://picsum.photos/200/320/",
-        headerimage:"https://picsum.photos/200/320/",
-        content:"[]",
-        categories:"[]",
-        comments:"[]",
-        description:"tdyfuyvhkbjluiyfutd56s4d5rytcuvhjbkjvyuftd56s4wsd5rytcgjvcu",
-    })
-    await Post.create({
-        title:"Hello world",
-        sideimage:"https://picsum.photos/200/350/",
-        headerimage:"https://picsum.photos/200/350/",
-        content:"[]",
-        categories:"[]",
-        comments:"[]",
-        description:"r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr r rr rrr rrrr ",
-    })
     if(!await User.findOne({where:{username:keys.admin.user}})){
         await User.create({
             username:keys.admin.user,
@@ -153,6 +103,25 @@ app.get('/',async function(req, res){
         posts:posts,
         catergories:catergories
     })
+})
+app.get('/:postid/',async function(req, res){
+    try{
+        let post=await Post.findOne({where:{id:req.params.postid}});
+        post.comments=JSON.parse(post.comments);
+        post.categories=JSON.parse(post.categories);
+        post.content=JSON.parse(post.content);
+        res.json(post)
+    }catch(e){res.status(404).send("Post not found")}
+})
+app.delete('/:postid/',async function(req, res){
+    if(req.body.passcode){
+        if(req.body.passcode===keys.admin.passcode){
+            await Post.destroy({where:{id:req.params.postid}});
+            res.send("Post deleted")
+        }else{
+            res.status(403).send("Wrong passcode")
+        }
+    }else{res.status(406).send("No passcode")}
 })
 
 app.post("/register/", async function(req, res){

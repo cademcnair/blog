@@ -7,11 +7,7 @@
     <textarea placeholder="Description" v-model="post.description" @input="update()"></textarea>
     <h2><i>{{post.title}}</i></h2>
     <img :src="post.headerimage" alt="">
-    <viewstring
-        :text="post.description"
-        :key="_update"
-        style="margin-bottom:10px;"
-    ></viewstring>
+    <p style="margin-bottom:10px;">{{post.description}}</p>
     <div class="div-style">
         <button @click="sections.push({title:'',content:[],image:'',description:''});update()">+</button>
         <button @click="sections.splice(selected-1,1);update()">-</button>

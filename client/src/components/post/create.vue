@@ -36,6 +36,9 @@
                 },
                 body:JSON.stringify(sendpost)
             })
+            if(data.ok){
+                this.$router.push("/")
+            }
         }
     }
   })

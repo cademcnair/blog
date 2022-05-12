@@ -2,8 +2,8 @@
   <div class='index-main'>
     <div class="manage-bar" v-if="admin">
       <button @click="create()">+</button>
-      <button @click="del(admin_selected)">-</button>
-      <button @click="edit(admin_selected)">=</button>
+      <button @click="del(admin_selected-1)">-</button>
+      <button @click="edit(admin_selected-1)">=</button>
       <input type="number" v-model="admin_selected">
     </div>
     <div class="posts">
@@ -16,7 +16,7 @@
           <div class="post--image" :style="{'background-image':`url(${post.sideimage})`}"></div>
           <div class="post--content">
             <b>{{post.title}}</b><br><br>
-            <a>{{cutoff(post.description,90)}}</a>
+            <a>{{cutoff(post.description,80)}}</a>
           </div>
         </div>
       </div>
@@ -58,8 +58,16 @@
       create(){
         this.$router.push("/post/create/")
       },
-      del(i:number){
-
+      async del(i:number){
+        if((await fetch(`${server}/${this.posts[i].id}`,{
+          method:"DELETE",
+          body:JSON.stringify({
+            passcode:cookies.get("passcode")
+          }),
+          headers:{
+            "Content-Type":"application/json"
+          }
+        })).ok){this.posts.splice(i,1)}
       },
       edit(i:number){
 
