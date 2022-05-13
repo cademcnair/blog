@@ -2,15 +2,7 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const nodemailer = require('nodemailer');
 const keys = require('./keys');
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: keys.email.user,
-        pass: keys.email.pass
-    }
-});
 const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: 'database.sqlite'
@@ -133,6 +125,7 @@ app.delete('/:postid/',async function(req, res){
     if(req.body.passcode){
         if(req.body.passcode===keys.admin.passcode){
             await Post.destroy({where:{id:req.params.postid}});
+            await UserComment.destroy({where:{post:req.params.postid}})
             res.send("Post deleted")
         }else{
             res.status(403).send("Wrong passcode")
