@@ -24,22 +24,21 @@
       edit
     },
     methods:{
-        async create(post:post){
-            let sendpost=post as any;
-            try{sendpost.categories=sendpost.categories.split(",");}
-            catch(e){sendpost.categories=[]}
-            sendpost.passcode=cookies.get("passcode")
-            let data=await fetch(`${server}/post/create`,{
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify(sendpost)
-            })
-            if(data.ok){
-                this.$router.push("/")
-            }
+      async create(post:post){
+        let sendpost=post as any;
+        sendpost.categories=sendpost.categories.split(",")
+        sendpost.passcode=cookies.get("passcode")
+        let data=await fetch(`${server}/post/create`,{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify(sendpost)
+        })
+        if(data.ok){
+          this.$router.push("/")
         }
+      }
     }
   })
 </script>

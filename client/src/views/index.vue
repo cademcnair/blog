@@ -1,9 +1,10 @@
 <template>
   <div class='index-main'>
     <div class="manage-bar" v-if="admin">
-      <button @click="create()">+</button>
-      <button @click="del(admin_selected-1)">-</button>
-      <button @click="edit(admin_selected-1)">=</button>
+      <button @click="create()">p+</button>
+      <button @click="ccreate()">c+</button>
+      <button @click="del(admin_selected-1)">p-</button>
+      <button @click="edit(admin_selected-1)">p=</button>
       <input type="number" v-model="admin_selected">
     </div>
     <div class="posts">
@@ -71,6 +72,9 @@
       },
       edit(i:number){
         this.$router.push(`/${this.posts[i].id}/post/edit/`)
+      },
+      ccreate(){
+        this.$router.push("/catergory/create/")
       }
     }
   })

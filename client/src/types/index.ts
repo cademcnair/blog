@@ -14,8 +14,6 @@ export interface catergory{
     id: number;
     name: string;
     description: string;
-    posts: number[];
-    comments: number[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -49,7 +47,7 @@ export interface post{
     id: number;
     title: string;
     content: section[];
-    categories: string;
+    categories: string|number[]|catergory[];
     comments: number[];
     createdAt: Date;
     updatedAt: Date;

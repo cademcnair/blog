@@ -37,7 +37,6 @@ User.init({
 Catergory.init({
     name:DataTypes.STRING,
     description:DataTypes.STRING,
-    comments:DataTypes.STRING,
 },{sequelize})
 Post.init({
     title:DataTypes.STRING,
@@ -95,10 +94,6 @@ app.get('/',async function(req, res){
         post.categories=JSON.parse(post.categories);
         post.content=JSON.parse(post.content);
     })
-    catergories.forEach(Catergory=>{
-        Catergory.posts=JSON.parse(Catergory.posts);
-        Catergory.comments=JSON.parse(Catergory.comments);
-    })
     res.json({
         posts:posts,
         catergories:catergories
@@ -106,11 +101,11 @@ app.get('/',async function(req, res){
 })
 app.get('/:postid/',async function(req, res){
     try{
-        let post=await Post.findOne({where:{id:req.params.postid}});
+        let post=JSON.parse(JSON.stringify(await Post.findOne({where:{id:req.params.postid}})));
         post.comments=JSON.parse(post.comments);
-        post.categories=JSON.parse(post.categories);
+        post.categories=req.query.view?await Catergory.findAll({where:{id:JSON.parse(post.categories)}}):JSON.parse(post.categories);
         post.content=JSON.parse(post.content);
-        res.json(post)
+        res.status(200).json(post)
     }catch(e){res.status(404).send("Post not found")}
 })
 app.delete('/:postid/',async function(req, res){
@@ -191,4 +186,64 @@ app.put("/post/create/", async function (req, res) {
             }
         }else{res.status(401).send("Wrong passcode")}
     }else{res.status(406).send("Missing parameters")}
+})
+app.post("/catergory/",async function (req, res){
+    if(objectkeys(req.body,['name','description','passcode'])){
+        if(req.body.passcode==keys.admin.passcode){
+            let catergory=await Catergory.create({
+                name:req.body.name,
+                description:req.body.description,
+            })
+            res.json(catergory)
+        }else{res.status(401).send("Wrong passcode")}
+    }else{res.status(406).send("Missing parameters")}
+})
+app.put("/catergory/",async function (req, res){
+    if(objectkeys(req.body,['name','description','passcode','id'])){
+        if(req.body.passcode==keys.admin.passcode){
+            let catergory=await Catergory.findOne({where:{id:req.body.id}})
+            if(catergory){
+                catergory.name=req.body.name;
+                catergory.description=req.body.description;
+                await catergory.save();
+                res.json(catergory)
+            }
+        }else{res.status(401).send("Wrong passcode")}
+    }else{res.status(406).send("Missing parameters")}
+})
+app.delete("/catergory/:cid/",async function (req, res){
+    if(objectkeys(req.body,['passcode'])){
+        if(req.body.passcode==keys.admin.passcode){
+            let catergory=await Catergory.findOne({where:{id:req.params.cid}})
+            if(catergory){
+                await Catergory.destroy({where:{id:req.params.cid}})
+                let posts=await Post.findAll();
+                for(let post of posts){
+                    let categories=JSON.parse(post.categories);
+                    let index=categories.indexOf(catergory.id+'');
+                    if(index>-1){
+                        categories.splice(index,1);
+                        post.categories=JSON.stringify(categories);
+                        await post.save();
+                    }
+                }
+                res.send("Catergory deleted")
+            }else{res.status(404).send("Catergory not found")}
+        }else{res.status(401).send("Wrong passcode")}
+    }else{res.status(406).send("Missing parameters")}
+})
+app.get("/catergory/:cid/",async function(req, res){
+    if(req.params.cid){
+        let catergory=await Catergory.findOne({where:{id:req.params.cid}})
+        let posts=(await Post.findAll())
+        posts=posts.filter(post=>{
+            return JSON.parse(post.categories).includes(catergory.id+'')
+        })
+        if(catergory){
+            res.json({
+                catergory:catergory,
+                posts:req.query.nopost?[]:posts
+            })
+        }else{res.status(404).send("Catergory not found")}
+    }else{res.status(406).send("Missing params")}
 })

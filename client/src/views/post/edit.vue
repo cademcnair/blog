@@ -43,8 +43,7 @@
     },
     methods:{async update(post:post){
       let sendpost=post as any;
-      try{sendpost.categories=sendpost.categories.split(",");}
-      catch(e){sendpost.categories=[]}
+      sendpost.categories=sendpost.categories.split(",");
       sendpost.passcode=cookies.get("passcode")
       sendpost.id=this.$route.params.p
       let data=await fetch(`${server}/post/create`,{

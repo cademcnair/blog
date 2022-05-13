@@ -2,13 +2,18 @@
   <div class='post-main'>
     <h2 style="margin-top:10px;"><i>{{post.title}}</i></h2>
     <img :src="post.headerimage" alt="">
+    <p class="center-text"><a>
+      <span v-for="(catergory,index) in returncatergorylist(post.categories)" :key="index">
+        <router-link :to="`/${catergory.id}/catergory/`">#{{catergory.name.toLowerCase()}}</router-link> 
+      </span>
+    </a></p>
     <p>{{post.description}}</p>
     <div 
       class="section"
       v-for="(section,index) in post.content"
       :key="index"
     >
-      <h3 v-if="section.title!=''">{{section.title}}</h3>
+      <h3 v-if="section.title!=''"><i>{{section.title}}</i></h3>
       <img :src="section.image" v-if="section.image!=''" alt="">
       <vstring
         v-if="section.description!=''"
@@ -47,7 +52,7 @@
 <script lang='ts'>
   import { defineComponent } from 'vue';
   import server from '../server/'
-  import { post } from '../types/'
+  import { post,catergory } from '../types/'
   import vstring from '../components/post/parts/view/string.vue'
   import vlist from '../components/post/parts/view/list.vue'
   import vcode from '../components/post/parts/view/code.vue'
@@ -55,7 +60,7 @@
   
   export default defineComponent({
     async mounted(){
-      let data=await fetch(`${server}/${this.$route.params.p}`)
+      let data=await fetch(`${server}/${this.$route.params.p}/?view=true`)
       let post:post=await data.json()
       this.post=post;
       console.log(post)
@@ -68,10 +73,24 @@
       vlist,
       vcode,
       vimage,
+    },
+    methods:{
+      returncatergorylist(c:any):catergory[]{
+        return c
+      }
     }
   })
 </script>
 
 <style scoped lang='scss'>
   @import url("../components/post/styles.scss");
+  a{
+    color:gray !important;
+    margin-bottom: 5px;
+    font-size:15px;
+  }
+  .center-text{
+    margin-top:0px;
+    margin-bottom:0px;
+  }
 </style>
