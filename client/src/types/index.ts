@@ -6,9 +6,9 @@ export interface comment{
     id: number;
     content: string;
     post: number;
-    user: number;
-    createdAt: Date;
-    updatedAt: Date;
+    user: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 export interface catergory{
     id: number;
@@ -48,7 +48,7 @@ export interface post{
     title: string;
     content: section[];
     categories: string|number[]|catergory[];
-    comments: number[];
+    comments: number[]|comment[];
     createdAt: Date;
     updatedAt: Date;
     description: string;

@@ -46,17 +46,26 @@
         ></vlist>
       </div>
     </div>
+    <div class="comments">
+      <h2 style="margin-bottom:5px;"><i>Comments</i></h2>
+      <input type="text" v-if="hasaccount" placeholder="Comment, enter to confirm" @keyup.enter="postcomment()" v-model="commentcontent">
+      <p
+        v-for="(comment,index) in returncommentlist(post.comments)"
+        :key="index"
+      ><b>{{comment.user}}</b>&nbsp;&nbsp;{{comment.content}}</p>
+    </div>
   </div>
 </template>
 
 <script lang='ts'>
   import { defineComponent } from 'vue';
   import server from '../server/'
-  import { post,catergory } from '../types/'
+  import { post,catergory,comment } from '../types/'
   import vstring from '../components/post/parts/view/string.vue'
   import vlist from '../components/post/parts/view/list.vue'
   import vcode from '../components/post/parts/view/code.vue'
   import vimage from '../components/post/parts/view/image.vue'
+  import cookies from 'cookies-js'
   
   export default defineComponent({
     async mounted(){
@@ -67,6 +76,8 @@
     },
     data(){return{
       post:{} as post,
+      commentcontent:"",
+      hasaccount:cookies.get("passcode")!=null,
     }},
     components:{
       vstring,
@@ -77,6 +88,31 @@
     methods:{
       returncatergorylist(c:any):catergory[]{
         return c
+      },
+      returncommentlist(c:any):comment[]{return c},
+      async postcomment(){
+        if(this.commentcontent!=""){
+          let comment={
+            username:cookies.get("username"),
+            content:this.commentcontent,
+            post:this.post.id,
+            passcode:cookies.get("passcode")
+          }
+          if((await fetch(`${server}/comment/`,{
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json"
+            },
+            body:JSON.stringify(comment)
+          })).ok){
+            this.post.comments.push({
+              user:cookies.get("username") as string,
+              content:this.commentcontent as string,
+              post: this.post.id,
+            } as any)
+            this.commentcontent=""
+          }
+        }
       }
     }
   })
@@ -92,5 +128,9 @@
   .center-text{
     margin-top:0px;
     margin-bottom:0px;
+  }
+  .comments{
+    margin-top:20px;
+    margin-bottom:100px;
   }
 </style>

@@ -4,7 +4,6 @@ const app = express();
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const keys = require('./keys');
-const { execSync } = require('child_process');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -50,7 +49,7 @@ Post.init({
 UserComment.init({
     content:DataTypes.STRING,
     post:DataTypes.INTEGER,
-    user:DataTypes.INTEGER,
+    user:DataTypes.STRING,
 },{sequelize})
 
 async function main(){
@@ -102,12 +101,34 @@ app.get('/',async function(req, res){
 app.get('/:postid/',async function(req, res){
     try{
         let post=JSON.parse(JSON.stringify(await Post.findOne({where:{id:req.params.postid}})));
-        post.comments=JSON.parse(post.comments);
+        post.comments=JSON.parse(post.comments)?await UserComment.findAll({where:{id:req.params.postid}}):JSON.parse(post.comments);
         post.categories=req.query.view?await Catergory.findAll({where:{id:JSON.parse(post.categories)}}):JSON.parse(post.categories);
         post.content=JSON.parse(post.content);
         res.status(200).json(post)
     }catch(e){res.status(404).send("Post not found")}
 })
+app.post("/comment/",async function (req,res){
+    if(objectkeys(req.body,['username','passcode','content','post'])){
+        if(await User.findOne({where:{username:req.body.username,passcode:req.body.passcode}})){
+            let comment=await UserComment.create({
+                content:req.body.content,
+                post:req.body.post,
+                user:req.body.username,
+            })
+            let post=await Post.findOne({where:{id:req.body.post}});
+            post.comments=JSON.parse(post.comments);
+            post.comments.push(comment.id);
+            post.comments=JSON.stringify(post.comments);
+            await post.save()
+            res.status(200).send("Comment created")
+        }else{
+            res.status(401).send("Unauthorized")
+        }
+    }else{
+        res.status(406).send("Missing parameters")
+    }
+})
+
 app.delete('/:postid/',async function(req, res){
     if(req.body.passcode){
         if(req.body.passcode===keys.admin.passcode){
