@@ -4,7 +4,8 @@
     <img :src="post.headerimage" alt="">
     <p class="center-text"><a>
       <span v-for="(catergory,index) in returncatergorylist(post.categories)" :key="index">
-        <router-link :to="`/${catergory.id}/catergory/`">#{{catergory.name.toLowerCase()}}</router-link> 
+        <router-link :to="`/${catergory.id}/catergory/`">#{{catergory.name.toLowerCase()}}</router-link>
+        &nbsp;
       </span>
     </a></p>
     <p>{{post.description}}</p>

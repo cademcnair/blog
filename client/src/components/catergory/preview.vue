@@ -2,7 +2,7 @@
   <div class='preview-main'>
     <h3><i>{{$attrs.title}}</i></h3>
     <p>{{$attrs.description}}</p>
-    <p>{{posts.length}} post{{posts.length==1?"":"s"}}</p>
+    <p>{{ispostarray($attrs.posts).length}} post{{ispostarray($attrs.posts).length==1?"":"s"}}</p>
     <div class="posts" v-if="ispostarray($attrs.posts).length!=0">
       <div 
         class="post"
@@ -26,9 +26,6 @@
   import { post } from '../../types/'
   
   export default defineComponent({
-    data(){return{
-        posts:this.$attrs.posts as post[]
-    }},
     methods:{
       stringify(array:object){
         return JSON.stringify(array)
