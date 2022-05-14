@@ -3,6 +3,7 @@
     <edit
       :title="catergory.name"
       :description="catergory.description"
+      :key="stringify(catergory)"
       @action="update($event)"
     ></edit>
   </div>
@@ -43,6 +44,9 @@
           this.$router.push("/")
         }
       },
+      stringify(obj:object){
+        return JSON.stringify(obj)
+      }
     }
   })
 </script>

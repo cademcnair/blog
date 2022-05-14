@@ -1,1 +1,1 @@
-export default "http://blog-server.aimedtuba.com"
+export default "https://blog-server.aimedtuba.com"

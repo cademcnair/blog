@@ -9,17 +9,17 @@
     <img :src="post.headerimage" alt="">
     <p style="margin-bottom:10px;">{{post.description}}</p>
     <div class="div-style">
-        <button @click="post.content.push({title:'',content:[],image:'',description:''});update()">+</button>
-        <button @click="post.content.splice(selected-1,1);update()">-</button>
+        <button @click="content.push({title:'',content:[],image:'',description:''});update()">+</button>
+        <button @click="content.splice(selected-1,1);update()">-</button>
         <input type="number" class="tiny" v-model="selected">
     </div>
     <editsection
         v-for="(section, index) in post.content"
-        :key="index"
+        :key="stringify(section)"
         :section="section"
-        @update="post.content[index]=$event;update()"
+        @update="content[index]=$event;update()"
     ></editsection>
-    <button @click="$emit('action',post)" class="long">Save</button>
+    <button @click="post.content=content;$emit('action',post)" class="long">Save</button>
   </div>
 </template>
 
@@ -31,25 +31,24 @@
   
   export default defineComponent({
     data(){return{
-        post:{
-            title:this.$attrs.title,
-            description:this.$attrs.description,
-            categories:JSON.parse(this.$attrs.categories as string).join(","),
-            content:this.$attrs.content=="[]"?[]:this.$attrs.content,
-            headerimage:this.$attrs.headerimage,
-            sideimage:this.$attrs.sideimage,
-        } as post,
-        _update:0,
-        selected:0,
+      post:{
+        title:this.$attrs.title,
+        description:this.$attrs.description,
+        categories:JSON.parse(this.$attrs.categories as string).join(","),
+        content:this.$attrs.content=="[]"?[]:this.$attrs.content as section[],
+        headerimage:this.$attrs.headerimage,
+        sideimage:this.$attrs.sideimage,
+      } as post,
+      selected:0,
+      content:this.$attrs.content=="[]"?[]:this.$attrs.content as section[]
     }},
     methods:{
-        update(){
-            this._update++;
-            console.log(JSON.parse(JSON.stringify(this.post)))
-        },
-        stringify(obj:object){
-            return JSON.stringify(obj)
-        }
+      update(){
+        console.log(this.post.content==this.content)
+      },
+      stringify(obj:object){
+        return JSON.stringify(obj)
+      }
     },
     components:{
         viewstring,
