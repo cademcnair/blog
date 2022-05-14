@@ -9,17 +9,17 @@
     <img :src="post.headerimage" alt="">
     <p style="margin-bottom:10px;">{{post.description}}</p>
     <div class="div-style">
-        <button @click="content.push({title:'',content:[],image:'',description:''});update()">+</button>
-        <button @click="content.splice(selected-1,1);update()">-</button>
+        <button @click="content_.push({title:'',content:[],image:'',description:''});update()">+</button>
+        <button @click="content_.splice(selected-1,1);update()">-</button>
         <input type="number" class="tiny" v-model="selected">
     </div>
     <editsection
-        v-for="(section, index) in post.content"
-        :key="stringify(section)"
+        v-for="(section, index) in content_"
+        :key="index"
         :section="section"
-        @update="content[index]=$event;update()"
+        @update="content_[index]=$event;update()"
     ></editsection>
-    <button @click="post.content=content;$emit('action',post)" class="long">Save</button>
+    <button @click="post.content=content_;$emit('action',post)" class="long">Save</button>
   </div>
 </template>
 
@@ -40,11 +40,11 @@
         sideimage:this.$attrs.sideimage,
       } as post,
       selected:0,
-      content:this.$attrs.content=="[]"?[]:this.$attrs.content as section[]
+      content_:JSON.parse(JSON.stringify(this.$attrs.content=="[]"?[]:this.$attrs.content)) as section[]
     }},
     methods:{
       update(){
-        console.log(this.post.content==this.content)
+        console.log(this.post.content==this.content_)
       },
       stringify(obj:object){
         return JSON.stringify(obj)
